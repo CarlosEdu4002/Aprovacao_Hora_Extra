@@ -31,6 +31,7 @@ A aba esperada é `SOLICITACOES`. A chave utilizada para evitar duplicidade é `
 ## Exemplos do Fluxo
 
 **Imagem Ampla do FLuxo Completo** 
+
 <img width="714" height="444" alt="c14db30a-2053-4a83-83c2-8c130195987f" src="https://github.com/user-attachments/assets/38afbbd8-c7dc-4460-9e6b-5fe4c9dce4c0" />
 
 **Área1 (Coleta de resposta forms e envio de emails)**
@@ -45,7 +46,8 @@ A aba esperada é `SOLICITACOES`. A chave utilizada para evitar duplicidade é `
 *Exemplos dos email enviados e da tela de confirmação do aceite e/ou recusa*
 
 <img width="992" height="637" alt="50f67155-6902-4c1d-a011-ec0f2648d173" src="https://github.com/user-attachments/assets/dd1b6ae2-8e87-493d-bc11-20b52f8d3e8f" />
-<img width="1032" height="688" alt="c9f37faf-7d35-4118-bc97-a0df1d224e87" src="https://github.com/user-attachments/assets/a6bd8c24-e749-44a5-a451-e6ecf6fdeeab" />
+<img width="972" height="604" alt="Screenshot_1" src="https://github.com/user-attachments/assets/153d4051-70d9-48af-a7de-f5a94e5baf6b" />
+
 
 
 ## Segurança
