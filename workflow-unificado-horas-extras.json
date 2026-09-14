@@ -1,0 +1,1243 @@
+{
+  "name": "Exemplo • Aprovação de hora extra — fluxo unificado",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Workflow unificado — exemplo público\n\n**Área 1:** busca novas solicitações, grava na Data Table e envia o e-mail.\n\n**Área 2:** exibe a confirmação e registra a decisão recebida pelos webhooks.\n\n**Área 3:** sincroniza somente registros novos ou alterados com o Google Sheets.\n\nOs ramos duplicados de outras unidades foram removidos. O workflow permanece inativo até você substituir os placeholders e selecionar suas credenciais.",
+        "height": 360,
+        "width": 640,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -380,
+        0
+      ],
+      "id": "5bfdf876-70d7-402d-af9a-324d486d43f6",
+      "name": "Visão geral • Workflow unificado"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.exemplo.com/formularios/unidade/respostas",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "inicio",
+              "value": "={{ $now.minus({ days: 1 }).startOf('day').toFormat('yyyy-MM-dd HH:mm:ss') }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": false
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        692,
+        120
+      ],
+      "id": "43704cdb-0b34-47c5-9478-cd08ce5af3c8",
+      "name": "API • Buscar solicitações da Unidade"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "SUBSTITUA_PELO_ID_DA_DATA_TABLE",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Codigo": "={{ $json['Código'] }}",
+            "PreenchidoEm": "={{ $json['Preenchido em'] }}",
+            "DataHE": "={{ $json['DATA DA HORA EXTRA'] }}",
+            "MotivoHE": "={{ $json['MOTIVO DA HORA EXTRA'] }}",
+            "Solicitante": "={{ $json.SOLICITANTE }}",
+            "NomeColaborador": "={{ $json['NOME COMPLETO DO COLABORADOR'] }}",
+            "Matricula": "={{ $json['MATRÍCULA'] }}",
+            "Setor": "={{ $json.SETOR }}",
+            "InicioHE": "={{ $json['HORA PROGRAMADA PARA INÍCIO DA HORA EXTRA'] }}",
+            "FimHE": "={{ $json['HORA PROGRAMADA PARA FIM DA HORA EXTRA'] }}",
+            "TipoHE": "={{ $json['TIPO DE HORA EXTRA'] }}",
+            "EmailStatus": "PENDENTE",
+            "StatusAprovacao": "PENDENTE"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Codigo",
+              "displayName": "Codigo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "PreenchidoEm",
+              "displayName": "PreenchidoEm",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Solicitante",
+              "displayName": "Solicitante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "NomeColaborador",
+              "displayName": "NomeColaborador",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Matricula",
+              "displayName": "Matricula",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Setor",
+              "displayName": "Setor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "DataHE",
+              "displayName": "DataHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "InicioHE",
+              "displayName": "InicioHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "FimHE",
+              "displayName": "FimHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "TipoHE",
+              "displayName": "TipoHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "MotivoHE",
+              "displayName": "MotivoHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "EmailStatus",
+              "displayName": "EmailStatus",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "EmailEnviadoEm",
+              "displayName": "EmailEnviadoEm",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "StatusAprovacao",
+              "displayName": "StatusAprovacao",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "DecidioEm",
+              "displayName": "DecidioEm",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1364,
+        120
+      ],
+      "id": "1a3b465f-d5a3-4e64-b2fe-43df7a903ae9",
+      "name": "Data Table • Inserir solicitação da Unidade"
+    },
+    {
+      "parameters": {
+        "operation": "rowNotExists",
+        "dataTableId": {
+          "__rl": true,
+          "value": "SUBSTITUA_PELO_ID_DA_DATA_TABLE",
+          "mode": "id"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Codigo",
+              "keyValue": "={{ $json['Código'] }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1140,
+        120
+      ],
+      "id": "09409056-9eea-4992-9ce2-ca4f4f58da0c",
+      "name": "Data Table • Verificar código da Unidade"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "SUBSTITUA_PELO_ID_DA_DATA_TABLE",
+          "mode": "id"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Codigo",
+              "keyValue": "={{ $('Data Table • Inserir solicitação da Unidade').item.json.Codigo }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "EmailStatus": "ENVIADO",
+            "EmailEnviadoEm": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Codigo",
+              "displayName": "Codigo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "PreenchidoEm",
+              "displayName": "PreenchidoEm",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Solicitante",
+              "displayName": "Solicitante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "NomeColaborador",
+              "displayName": "NomeColaborador",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Matricula",
+              "displayName": "Matricula",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Setor",
+              "displayName": "Setor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "DataHE",
+              "displayName": "DataHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "InicioHE",
+              "displayName": "InicioHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "FimHE",
+              "displayName": "FimHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "TipoHE",
+              "displayName": "TipoHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "MotivoHE",
+              "displayName": "MotivoHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "EmailStatus",
+              "displayName": "EmailStatus",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "EmailEnviadoEm",
+              "displayName": "EmailEnviadoEm",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2036,
+        120
+      ],
+      "id": "8c88bf8b-7730-4d94-a9db-c4001a7f5732",
+      "name": "Data Table • Marcar e-mail enviado da Unidade"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        276,
+        472
+      ],
+      "id": "1f4245b5-1e69-4cb9-89c5-cdcafbbf62a7",
+      "name": "Agendamento • Coletar novas solicitações"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1812,
+        120
+      ],
+      "id": "9b9e0e7f-5f25-48e7-8626-7b6f6cb572e2",
+      "name": "Aguardar • Processamento da Unidade"
+    },
+    {
+      "parameters": {
+        "fromEmail": "remetente@exemplo.com",
+        "toEmail": "gestor@exemplo.com",
+        "subject": "Nova solicitação de hora extra",
+        "html": "=<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Solicitação de hora extra</title>\n</head>\n\n<body style=\"margin:0; padding:0; background-color:#f1f4f8; font-family:Arial, Helvetica, sans-serif;\">\n\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"\n         style=\"width:100%; background-color:#f1f4f8;\">\n    <tr>\n      <td align=\"center\" style=\"padding:30px 15px;\">\n\n        <table role=\"presentation\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\"\n               style=\"width:100%; max-width:600px; background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(20,45,80,0.10);\">\n\n          <!-- Cabeçalho -->\n          <tr>\n            <td style=\"background-color:#1261a0; padding:24px 28px;\">\n\n              <div style=\"font-size:11px; line-height:16px; font-weight:bold; color:#dbeeff; letter-spacing:0.8px; text-transform:uppercase;\">\n                Sua Empresa\n              </div>\n\n              <div style=\"margin-top:6px; font-size:23px; line-height:30px; font-weight:bold; color:#ffffff;\">\n                Solicitação de hora extra\n              </div>\n\n            </td>\n          </tr>\n\n          <!-- Conteúdo -->\n          <tr>\n            <td style=\"padding:26px 28px 16px 28px;\">\n\n              <p style=\"margin:0; font-size:14px; line-height:22px; color:#52637a;\">\n                Uma nova solicitação aguarda sua decisão.\n              </p>\n\n              <div style=\"height:1px; background-color:#e1e7ef; margin:20px 0;\"></div>\n\n              <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"\n                     style=\"width:100%; border-collapse:collapse;\">\n\n                <tr>\n                  <td width=\"32%\" style=\"padding:8px 0; font-size:13px; color:#718096;\">\n                    Código\n                  </td>\n                  <td style=\"padding:8px 0; font-size:13px; color:#172033; font-weight:bold;\">\n                    {{ $json.Codigo }}\n                  </td>\n                </tr>\n\n                <tr>\n                  <td style=\"padding:8px 0; font-size:13px; color:#718096;\">\n                    Unidade\n                  </td>\n                  <td style=\"padding:8px 0; font-size:13px; color:#172033; font-weight:bold;\">\n                    Unidade\n                  </td>\n                </tr>\n\n                <tr>\n                  <td style=\"padding:8px 0; font-size:13px; color:#718096;\">\n                    Colaborador\n                  </td>\n                  <td style=\"padding:8px 0; font-size:13px; color:#172033; font-weight:bold;\">\n                    {{ $json.NomeColaborador }}\n                  </td>\n                </tr>\n\n                <tr>\n                  <td style=\"padding:8px 0; font-size:13px; color:#718096;\">\n                    Matrícula\n                  </td>\n                  <td style=\"padding:8px 0; font-size:13px; color:#172033; font-weight:bold;\">\n                    {{ $json.Matricula }}\n                  </td>\n                </tr>\n\n                <tr>\n                  <td style=\"padding:8px 0; font-size:13px; color:#718096;\">\n                    Setor\n                  </td>\n                  <td style=\"padding:8px 0; font-size:13px; color:#172033; font-weight:bold;\">\n                    {{ $json.Setor }}\n                  </td>\n                </tr>\n\n                <!-- Data formatada no padrão brasileiro -->\n                <tr>\n                  <td style=\"padding:8px 0; font-size:13px; color:#718096;\">\n                    Data\n                  </td>\n                  <td style=\"padding:8px 0; font-size:13px; color:#172033; font-weight:bold;\">\n                    {{ new Date($json.DataHE).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric' }) }}\n                  </td>\n                </tr>\n\n                <!-- Horários formatados no padrão brasileiro -->\n                <tr>\n                  <td style=\"padding:8px 0; font-size:13px; color:#718096;\">\n                    Horário\n                  </td>\n                  <td style=\"padding:8px 0; font-size:13px; color:#172033; font-weight:bold;\">\n                    {{ new Date($json.InicioHE).toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', hour12: false }) }}\n                    -\n                    {{ new Date($json.FimHE).toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', hour12: false }) }}\n                  </td>\n                </tr>\n\n                <tr>\n                  <td style=\"padding:8px 0; font-size:13px; color:#718096;\">\n                    Tipo\n                  </td>\n                  <td style=\"padding:8px 0; font-size:13px; color:#172033; font-weight:bold;\">\n                    {{ $json.TipoHE }}\n                  </td>\n                </tr>\n\n                <tr>\n                  <td style=\"padding:8px 0; font-size:13px; color:#718096;\">\n                    Motivo\n                  </td>\n                  <td style=\"padding:8px 0; font-size:13px; color:#172033; font-weight:bold;\">\n                    {{ $json.MotivoHE }}\n                  </td>\n                </tr>\n\n                <tr>\n                  <td style=\"padding:8px 0; font-size:13px; color:#718096;\">\n                    Solicitante\n                  </td>\n                  <td style=\"padding:8px 0; font-size:13px; color:#172033; font-weight:bold;\">\n                    {{ $json.Solicitante }}\n                  </td>\n                </tr>\n\n              </table>\n\n              <div style=\"height:1px; background-color:#e1e7ef; margin:20px 0;\"></div>\n\n              <p style=\"margin:0 0 16px 0; font-size:13px; line-height:20px; color:#52637a;\">\n                Selecione uma opção para registrar sua decisão:\n              </p>\n\n              <!-- Botões -->\n              <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\">\n                <tr>\n\n                  <td style=\"padding-right:10px;\">\n                    <a href=\"https://SEU-N8N.EXEMPLO.COM/webhook/confirmar-he?unit=unidade&amp;codigo={{ encodeURIComponent($json.Codigo) }}&amp;decisao=APROVADO\"\n                       style=\"display:inline-block; padding:13px 24px; background-color:#16884b; color:#ffffff; text-decoration:none; border-radius:6px; font-size:13px; font-weight:bold;\">\n                      Aprovar\n                    </a>\n                  </td>\n\n                  <td>\n                    <a href=\"https://SEU-N8N.EXEMPLO.COM/webhook/confirmar-he?unit=unidade&amp;codigo={{ encodeURIComponent($json.Codigo) }}&amp;decisao=REPROVADO\"\n                       style=\"display:inline-block; padding:13px 24px; background-color:#c82c25; color:#ffffff; text-decoration:none; border-radius:6px; font-size:13px; font-weight:bold;\">\n                      Reprovar\n                    </a>\n                  </td>\n\n                </tr>\n              </table>\n\n            </td>\n          </tr>\n\n          <!-- Rodapé -->\n          <tr>\n            <td style=\"padding:16px 28px 24px 28px;\">\n\n              <div style=\"padding-top:16px; border-top:1px solid #e1e7ef; font-size:11px; line-height:18px; color:#8996a8;\">\n                Esta é uma mensagem automática.<br>\n                Não encaminhe este e-mail. Os botões são exclusivos desta solicitação.\n              </div>\n\n            </td>\n          </tr>\n\n        </table>\n\n      </td>\n    </tr>\n  </table>\n\n</body>\n</html>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1588,
+        120
+      ],
+      "id": "0cf47ff2-e081-4c9f-a5dc-f3617519152c",
+      "name": "E-mail • Solicitar decisão da Unidade"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "dados",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        916,
+        120
+      ],
+      "id": "6c3f9655-27cd-4dc2-bf24-6de088acfee5",
+      "name": "Lista • Separar solicitações da Unidade"
+    },
+    {
+      "parameters": {
+        "path": "confirmar-he",
+        "responseMode": "responseNode",
+        "options": {
+          "ignoreBots": true
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        420,
+        1420
+      ],
+      "id": "14952e79-29b9-4f27-b6e2-fae4f719a3d5",
+      "name": "Webhook • Abrir confirmação"
+    },
+    {
+      "parameters": {
+        "jsCode": "const q = $json.query ?? {};\nconst unidade = String(q.unit ?? '').trim().toLowerCase();\nconst codigo = String(q.codigo ?? '').trim();\nconst decisao = String(q.decisao ?? '').trim().toUpperCase();\n\nconst unidades = {\n  unidade: { nome: 'Unidade', tabelaId: 'SUBSTITUA_PELO_ID_DA_DATA_TABLE' },\n};\n\nif (!unidades[unidade]) throw new Error('Unidade inválida ou ausente.');\nif (!codigo) throw new Error('Código da solicitação ausente.');\nif (!['APROVADO', 'REPROVADO'].includes(decisao)) throw new Error('Decisão inválida ou ausente.');\n\nreturn [{ json: {\n  unidade,\n  unidadeNome: unidades[unidade].nome,\n  tabelaId: unidades[unidade].tabelaId,\n  codigo,\n  decisao,\n} }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        1420
+      ],
+      "id": "49d98959-10e4-4811-87a2-834e02da94bc",
+      "name": "Código • Validar link de decisão"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "={{ $json.tabelaId }}",
+          "mode": "id"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Codigo",
+              "keyValue": "={{ $json.codigo }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        900,
+        1420
+      ],
+      "id": "7af47e2f-eed4-4812-87e6-3b3bff6a15dd",
+      "name": "Data Table • Buscar solicitação",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const p = $('Código • Validar link de decisão').first().json;\nconst r = $input.first().json ?? {};\nconst esc = (v) => String(v ?? '')\n  .replaceAll('&', '&amp;').replaceAll('<', '&lt;')\n  .replaceAll('>', '&gt;').replaceAll('\"', '&quot;')\n  .replaceAll(\"'\", '&#039;');\n\nconst encontrada = String(r.Codigo ?? '') === p.codigo;\nif (!encontrada) {\n  const html = '<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\">' +\n    '<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">' +\n    '<title>Solicitação não encontrada</title></head>' +\n    '<body style=\"margin:0;background:#f2f4f7;font-family:Arial,sans-serif;padding:24px\">' +\n    '<main style=\"max-width:560px;margin:40px auto;background:#fff;padding:32px;border-radius:14px;text-align:center;' +\n    'box-shadow:0 8px 28px rgba(16,24,40,.12)\"><div style=\"font-size:44px;color:#b42318\">!</div>' +\n    '<h2 style=\"color:#b42318\">Solicitação não encontrada</h2>' +\n    '<p style=\"color:#667085\">Confira o link recebido ou verifique se a solicitação ainda existe.</p></main></body></html>';\n  return [{ json: { html } }];\n}\n\nconst aprovando = p.decisao === 'APROVADO';\nconst cor = aprovando ? '#15803d' : '#b42318';\nconst fundo = aprovando ? '#f0fdf4' : '#fef3f2';\nconst titulo = aprovando ? 'Confirmar aprovação' : 'Confirmar recusa';\nconst urlPost = 'https://SEU-N8N.EXEMPLO.COM/webhook/registrar-decisao-he';\nconst formatarData = (valor) => {\n  const data = new Date(valor);\n  if (Number.isNaN(data.getTime())) return valor || '—';\n  return new Intl.DateTimeFormat('pt-BR', {\n    timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric'\n  }).format(data);\n};\nconst formatarHora = (valor) => {\n  const data = new Date(valor);\n  if (Number.isNaN(data.getTime())) return valor || '';\n  return new Intl.DateTimeFormat('pt-BR', {\n    timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', hour12: false\n  }).format(data);\n};\nconst horario = [formatarHora(r.InicioHE), formatarHora(r.FimHE)].filter(Boolean).join(' - ');\nconst campos = [\n  ['Unidade', p.unidadeNome], ['Código', r.Codigo],\n  ['Colaborador', r.NomeColaborador], ['Matrícula', r.Matricula],\n  ['Setor', r.Setor], ['Data', formatarData(r.DataHE)], ['Horário', horario],\n  ['Tipo', r.TipoHE], ['Motivo', r.MotivoHE], ['Solicitante', r.Solicitante],\n];\nconst linhas = campos.map(([k,v]) => '<tr><td style=\"padding:9px 4px;border-bottom:1px solid #eaecf0;color:#667085;' +\n  'width:145px;vertical-align:top\">' + esc(k) + '</td><td style=\"padding:9px 4px;border-bottom:1px solid #eaecf0;' +\n  'color:#101828;font-weight:600\">' + esc(v || '—') + '</td></tr>').join('');\nconst obrigatorio = aprovando ? '' : ' required';\nconst ajuda = aprovando ? 'Comentário opcional.' : 'Informe o motivo da recusa.';\n\nconst html = '<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\">' +\n  '<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>' + titulo + '</title></head>' +\n  '<body style=\"margin:0;background:#f2f4f7;color:#101828;font-family:Arial,sans-serif;padding:24px 14px\">' +\n  '<main style=\"max-width:620px;margin:20px auto;background:#fff;border-radius:14px;overflow:hidden;' +\n  'box-shadow:0 8px 28px rgba(16,24,40,.12)\"><header style=\"padding:24px 28px;background:#07599b;color:#fff\">' +\n  '<div style=\"font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;opacity:.85\">Sua Empresa</div>' +\n  '<h1 style=\"margin:6px 0 0;font-size:24px\">' + titulo + '</h1></header><section style=\"padding:28px\">' +\n  '<div style=\"margin-bottom:22px;padding:16px;border-left:5px solid ' + cor + ';border-radius:8px;background:' + fundo +\n  ';color:' + cor + ';font-weight:700\">Deseja realmente ' + (aprovando ? 'aprovar' : 'recusar') +\n  ' esta solicitação de hora extra?</div><table style=\"width:100%;border-collapse:collapse;margin-bottom:24px\">' + linhas +\n  '</table><form method=\"post\" action=\"' + urlPost + '\">' +\n  '<input type=\"hidden\" name=\"unit\" value=\"' + esc(p.unidade) + '\">' +\n  '<input type=\"hidden\" name=\"codigo\" value=\"' + esc(p.codigo) + '\">' +\n  '<input type=\"hidden\" name=\"decisao\" value=\"' + esc(p.decisao) + '\">' +\n  '<label for=\"comentario\" style=\"display:block;margin-bottom:7px;font-weight:700\">Comentário</label>' +\n  '<textarea id=\"comentario\" name=\"comentario\" maxlength=\"1000\"' + obrigatorio +\n  ' style=\"box-sizing:border-box;width:100%;min-height:100px;padding:12px;border:1px solid #d0d5dd;border-radius:8px;' +\n  'font:14px Arial;resize:vertical\"></textarea><p style=\"margin:7px 0 22px;color:#667085;font-size:12px\">' + ajuda +\n  '</p><div style=\"display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap\">' +\n  '<button type=\"button\" onclick=\"history.back()\" style=\"padding:12px 18px;border:1px solid #d0d5dd;border-radius:8px;' +\n  'background:#fff;color:#344054;font-weight:700;cursor:pointer\">Cancelar</button>' +\n  '<button type=\"submit\" style=\"padding:12px 18px;border:0;border-radius:8px;background:' + cor +\n  ';color:#fff;font-weight:700;cursor:pointer\">' + titulo + '</button></div></form></section></main></body></html>';\n\nreturn [{ json: { html } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        1420
+      ],
+      "id": "275da78e-169a-4a70-b887-9465863ef939",
+      "name": "Código • Montar tela de confirmação"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.html }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1380,
+        1420
+      ],
+      "id": "0d193310-beba-4a9d-be21-67c7c41a69a5",
+      "name": "Resposta • Exibir confirmação"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "registrar-decisao-he",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        420,
+        1612
+      ],
+      "id": "574856a7-823d-4a5e-a69f-12d585322f02",
+      "name": "Webhook • Receber decisão"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $json.body ?? {};\nconst unidade = String(b.unit ?? '').trim().toLowerCase();\nconst codigo = String(b.codigo ?? '').trim();\nconst decisao = String(b.decisao ?? '').trim().toUpperCase();\nconst comentario = String(b.comentario ?? '').trim().slice(0, 1000);\nconst unidades = {\n  unidade: { nome: 'Unidade', tabelaId: 'SUBSTITUA_PELO_ID_DA_DATA_TABLE' },\n};\nif (!unidades[unidade]) throw new Error('Unidade inválida ou ausente.');\nif (!codigo) throw new Error('Código da solicitação ausente.');\nif (!['APROVADO', 'REPROVADO'].includes(decisao)) throw new Error('Decisão inválida ou ausente.');\nif (decisao === 'REPROVADO' && !comentario) throw new Error('Informe o motivo da recusa.');\nreturn [{ json: {\n  unidade, unidadeNome: unidades[unidade].nome,\n  tabelaId: unidades[unidade].tabelaId, codigo, decisao, comentario,\n} }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        1612
+      ],
+      "id": "b0203ac0-4fd2-4fb1-b4b6-75bfbbc177d1",
+      "name": "Código • Validar decisão recebida"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "={{ $json.tabelaId }}",
+          "mode": "id"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Codigo",
+              "keyValue": "={{ $json.codigo }}"
+            },
+            {
+              "keyName": "StatusAprovacao",
+              "keyValue": "PENDENTE"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "StatusAprovacao": "={{ $json.decisao }}",
+            "DecidioEm": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "StatusAprovacao",
+              "displayName": "StatusAprovacao",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "DecidioEm",
+              "displayName": "DecidioEm",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        900,
+        1612
+      ],
+      "id": "b770f331-18df-4dc5-bfd8-55c948587b6f",
+      "name": "Data Table • Registrar decisão",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const p = $('Código • Validar decisão recebida').first().json;\nconst atualizado = String($json.StatusAprovacao ?? '').toUpperCase() === p.decisao;\nconst cor = atualizado ? (p.decisao === 'APROVADO' ? '#15803d' : '#b42318') : '#b54708';\nconst titulo = atualizado ? (p.decisao === 'APROVADO' ? 'Solicitação aprovada' : 'Solicitação recusada') : 'Solicitação já processada';\nconst mensagem = atualizado\n  ? 'A decisão foi registrada com sucesso para a unidade ' + p.unidadeNome + '.'\n  : 'Nenhuma alteração foi realizada. A solicitação pode já ter sido decidida.';\nconst html = '<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\">' +\n  '<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>' + titulo + '</title></head>' +\n  '<body style=\"margin:0;background:#f2f4f7;font-family:Arial,sans-serif;padding:24px\">' +\n  '<main style=\"max-width:560px;margin:40px auto;background:#fff;padding:34px;border-radius:14px;text-align:center;' +\n  'box-shadow:0 8px 28px rgba(16,24,40,.12)\"><div style=\"font-size:46px;color:' + cor + '\">' +\n  (atualizado ? '&#10003;' : '!') + '</div><h2 style=\"color:' + cor + '\">' + titulo + '</h2>' +\n  '<p style=\"color:#667085;line-height:1.5\">' + mensagem + '</p>' +\n  '<p style=\"color:#98a2b3;font-size:12px\">Esta página já pode ser fechada.</p></main></body></html>';\nreturn [{ json: { html } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        1612
+      ],
+      "id": "7c03e166-3390-4690-9a24-38cbf3ab553f",
+      "name": "Código • Montar resultado da decisão"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.html }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1380,
+        1612
+      ],
+      "id": "6e83fa66-823f-4031-97f1-30f07774d6c4",
+      "name": "Resposta • Exibir resultado"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "SUBSTITUA_PELO_ID_DA_PLANILHA",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "SOLICITACOES",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "e8f7f9e4-d4b5-4348-a3ee-c06adce9ed2b",
+      "name": "Sheets • Ler Unidade",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        900,
+        1980
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const FUSO_HORARIO = 'America/Sao_Paulo';\n\nconst colunas = [\n  'id',\n  'Codigo',\n  'PreenchidoEm',\n  'Solicitante',\n  'NomeColaborador',\n  'Matricula',\n  'Setor',\n  'DataHE',\n  'InicioHE',\n  'FimHE',\n  'TipoHE',\n  'MotivoHE',\n  'EmailStatus',\n  'EmailEnviadoEm',\n  'StatusAprovacao',\n  'DecidioEm',\n  'createdAt',\n  'updatedAt'\n];\n\nconst camposSomenteData = [\n  'DataHE'\n];\n\nconst camposDataHora = [\n  'PreenchidoEm',\n  'InicioHE',\n  'FimHE',\n  'EmailEnviadoEm',\n  'DecidioEm',\n  'createdAt',\n  'updatedAt'\n];\n\nconst formatarDataLocal = valor => {\n  if (!valor) return '';\n\n  const data = new Date(valor);\n\n  if (Number.isNaN(data.getTime())) {\n    return valor;\n  }\n\n  return new Intl.DateTimeFormat('sv-SE', {\n    timeZone: FUSO_HORARIO,\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit'\n  }).format(data);\n};\n\nconst formatarDataHoraLocal = valor => {\n  if (!valor) return '';\n\n  const data = new Date(valor);\n\n  if (Number.isNaN(data.getTime())) {\n    return valor;\n  }\n\n  return new Intl.DateTimeFormat('sv-SE', {\n    timeZone: FUSO_HORARIO,\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n    hour: '2-digit',\n    minute: '2-digit',\n    second: '2-digit',\n    hourCycle: 'h23'\n  }).format(data);\n};\n\nconst normalizar = valor => {\n  if (valor === null || valor === undefined) {\n    return '';\n  }\n\n  return String(valor).trim();\n};\n\nconst montarLinha = row => {\n  const linha = {};\n\n  for (const coluna of colunas) {\n    linha[coluna] = row[coluna] ?? '';\n  }\n\n  for (const campo of camposSomenteData) {\n    linha[campo] = formatarDataLocal(row[campo]);\n  }\n\n  for (const campo of camposDataHora) {\n    linha[campo] = formatarDataHoraLocal(row[campo]);\n  }\n\n  return linha;\n};\n\nconst origem = $('Data Table • Ler Unidade')\n  .all()\n  .map(item => item.json);\n\nconst destino = $('Sheets • Ler Unidade')\n  .all()\n  .map(item => item.json)\n  .filter(row => row && Object.keys(row).length > 0);\n\nconst destinoPorCodigo = new Map();\n\nfor (const row of destino) {\n  const codigo = normalizar(row.Codigo);\n\n  if (codigo) {\n    destinoPorCodigo.set(codigo, row);\n  }\n}\n\nconst linhasParaSincronizar = [];\n\nfor (const row of origem) {\n  const codigo = normalizar(row.Codigo);\n\n  if (!codigo) {\n    throw new Error(\n      'Foi encontrada uma linha sem Codigo na Data Table.'\n    );\n  }\n\n  const linha = montarLinha(row);\n  const linhaExistente = destinoPorCodigo.get(codigo);\n\n  // Se ainda não existe na planilha, adiciona.\n  if (!linhaExistente) {\n    linhasParaSincronizar.push({ json: linha });\n    continue;\n  }\n\n  // Se existe, envia somente quando algum campo mudou.\n  const mudou = colunas.some(coluna => {\n    const valorAtual = normalizar(linha[coluna]);\n    const valorNaPlanilha = normalizar(linhaExistente[coluna]);\n\n    return valorAtual !== valorNaPlanilha;\n  });\n\n  if (mudou) {\n    linhasParaSincronizar.push({ json: linha });\n  }\n}\n\nreturn linhasParaSincronizar;"
+      },
+      "id": "f3ef7bc4-0ca5-450a-8b6c-fcd05764677a",
+      "name": "Código • Filtrar alterações da Unidade",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        1980
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "SUBSTITUA_PELO_ID_DA_PLANILHA",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "SOLICITACOES",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "Codigo"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Codigo",
+              "displayName": "Codigo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "PreenchidoEm",
+              "displayName": "PreenchidoEm",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Solicitante",
+              "displayName": "Solicitante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "NomeColaborador",
+              "displayName": "NomeColaborador",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Matricula",
+              "displayName": "Matricula",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Setor",
+              "displayName": "Setor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DataHE",
+              "displayName": "DataHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "InicioHE",
+              "displayName": "InicioHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FimHE",
+              "displayName": "FimHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "TipoHE",
+              "displayName": "TipoHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "MotivoHE",
+              "displayName": "MotivoHE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "EmailStatus",
+              "displayName": "EmailStatus",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "EmailEnviadoEm",
+              "displayName": "EmailEnviadoEm",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "StatusAprovacao",
+              "displayName": "StatusAprovacao",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DecidioEm",
+              "displayName": "DecidioEm",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updatedAt",
+              "displayName": "updatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "8de79b13-c889-477a-907d-8a5a6078af6d",
+      "name": "Sheets • Sincronizar Unidade",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1380,
+        1980
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Configure antes de ativar\n\nEste workflow reúne três partes independentes no mesmo arquivo: coleta e envio, decisão por webhook e sincronização com Google Sheets.\n\n1. Crie uma Data Table com as colunas usadas pelos nós e substitua `SUBSTITUA_PELO_ID_DA_DATA_TABLE`.\n2. Troque as URLs `api.exemplo.com` pelas APIs de origem.\n3. Troque `SEU-N8N.EXEMPLO.COM` pelo endereço público HTTPS do n8n.\n4. Configure as credenciais SMTP nos quatro nós de e-mail e altere remetentes/destinatários.\n5. Configure a credencial Google Service Account e substitua `SUBSTITUA_PELO_ID_DA_PLANILHA`.\n6. Crie a aba `SOLICITACOES` com os cabeçalhos esperados.\n7. Execute cada gatilho manualmente, valide o resultado e só então ative o workflow.\n\n**Chave contra duplicidade:** `Codigo`\n\n**Cabeçalhos:** id, Codigo, PreenchidoEm, Solicitante, NomeColaborador, Matricula, Setor, DataHE, InicioHE, FimHE, TipoHE, MotivoHE, EmailStatus, EmailEnviadoEm, StatusAprovacao, DecidioEm, createdAt, updatedAt",
+        "height": 620,
+        "width": 640,
+        "color": 5
+      },
+      "id": "895b4da8-6d6c-44b7-a357-958f382019d7",
+      "name": "Instruções • Configurar o exemplo",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        772,
+        1500
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "id": "26d3ffc3-6bc9-48b0-aafa-5bf301684bec",
+      "name": "Agendamento • Sincronizar Google Sheets",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        404,
+        2204
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "SUBSTITUA_PELO_ID_DA_DATA_TABLE",
+          "mode": "id"
+        },
+        "returnAll": true
+      },
+      "id": "d20f60ae-1ab2-4be8-b10b-7780622279d2",
+      "name": "Data Table • Ler Unidade",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        1980
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "API • Buscar solicitações da Unidade": {
+      "main": [
+        [
+          {
+            "node": "Lista • Separar solicitações da Unidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Table • Verificar código da Unidade": {
+      "main": [
+        [
+          {
+            "node": "Data Table • Inserir solicitação da Unidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Table • Inserir solicitação da Unidade": {
+      "main": [
+        [
+          {
+            "node": "E-mail • Solicitar decisão da Unidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agendamento • Coletar novas solicitações": {
+      "main": [
+        [
+          {
+            "node": "API • Buscar solicitações da Unidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aguardar • Processamento da Unidade": {
+      "main": [
+        [
+          {
+            "node": "Data Table • Marcar e-mail enviado da Unidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "E-mail • Solicitar decisão da Unidade": {
+      "main": [
+        [
+          {
+            "node": "Aguardar • Processamento da Unidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lista • Separar solicitações da Unidade": {
+      "main": [
+        [
+          {
+            "node": "Data Table • Verificar código da Unidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook • Abrir confirmação": {
+      "main": [
+        [
+          {
+            "node": "Código • Validar link de decisão",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Código • Validar link de decisão": {
+      "main": [
+        [
+          {
+            "node": "Data Table • Buscar solicitação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Table • Buscar solicitação": {
+      "main": [
+        [
+          {
+            "node": "Código • Montar tela de confirmação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Código • Montar tela de confirmação": {
+      "main": [
+        [
+          {
+            "node": "Resposta • Exibir confirmação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook • Receber decisão": {
+      "main": [
+        [
+          {
+            "node": "Código • Validar decisão recebida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Código • Validar decisão recebida": {
+      "main": [
+        [
+          {
+            "node": "Data Table • Registrar decisão",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Table • Registrar decisão": {
+      "main": [
+        [
+          {
+            "node": "Código • Montar resultado da decisão",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Código • Montar resultado da decisão": {
+      "main": [
+        [
+          {
+            "node": "Resposta • Exibir resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheets • Ler Unidade": {
+      "main": [
+        [
+          {
+            "node": "Código • Filtrar alterações da Unidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Código • Filtrar alterações da Unidade": {
+      "main": [
+        [
+          {
+            "node": "Sheets • Sincronizar Unidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agendamento • Sincronizar Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Data Table • Ler Unidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Table • Ler Unidade": {
+      "main": [
+        [
+          {
+            "node": "Sheets • Ler Unidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheets • Sincronizar Unidade": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}
